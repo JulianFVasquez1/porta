@@ -6,6 +6,40 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import emailjs from '@emailjs/browser';
+import { MinimalistHero } from '@/components/ui/minimalist-hero';
+import { StatsSection } from '@/components/portfolio/stats-section';
+import { SkillsSection } from '@/components/portfolio/skills-section';
+import { ExperienceSection } from '@/components/portfolio/experience-section';
+import { ProjectsSection } from '@/components/portfolio/projects-section';
+import { ContactSection } from '@/components/portfolio/contact-section';
+
+const GithubIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+    <path d="M9 18c-4.51 2-5-2-7-2" />
+  </svg>
+);
+
+const LinkedinIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect x="2" y="9" width="4" height="12" />
+    <circle cx="4" cy="4" r="2" />
+  </svg>
+);
+
+const WhatsappIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 21l1.9-5.7a8.5 8.5 0 113.8 3.8z" />
+  </svg>
+);
+
+const MailIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect width="20" height="16" x="2" y="4" rx="2" />
+    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+  </svg>
+);
 
 // ==========================================
 // HOOK PERSONALIZADO: Scroll Reveal
@@ -216,7 +250,7 @@ const portfolio = {
   name: "Julián Vasquez Ojeda",
   role: "Analista de Datos",
   roleSecondary: "Ingeniero de Sistemas",
-  summary: " Experiencia práctica como Analista de Datos. En Power BI, Python y SQL para extracción, procesamiento y visualización de datos. Desarrollador web con bastante cretividad para integrar o generar proyectos de alto impacto ,Capacidad comprobada para generar reportes estratégicos que apoyan la toma de decisiones con mis conocimientos aportando soluciones tecnológicas de impacto.",
+  summary: " Experiencia práctica como Analista de Datos. En Power BI, Python y SQL para extracción, procesamiento y visualización de datos. Desarrollador web con bastante creatividad para integrar o generar proyectos de alto impacto. Capacidad comprobada para generar reportes estratégicos que apoyan la toma de decisiones con mis conocimientos aportando soluciones tecnológicas de impacto.",
   email: "julianvasquez799@gmail.com",
   phone: "+57 3004627891",
   location: "Bogotá, Colombia",
@@ -271,12 +305,6 @@ const education = [
     institution: "Universidad Santo Tomás",
     location: "Tunja",
     period: "2022 – Actual (9° semestre)"
-  },
-  {
-    degree: "Bachiller Académico",
-    institution: "Colegio Salesiano Maldonado",
-    location: "Tunja", // Asumiendo, dado el contexto
-    period: "Enero 2021"
   }
 ];
 
@@ -432,240 +460,38 @@ function Navbar() {
 
 // 3.2 Hero (Componente de introducción superior en la web)
 function Hero() {
-  const node1Ref = useRef<HTMLDivElement>(null);
-  const node2Ref = useRef<HTMLDivElement>(null);
-  const node3Ref = useRef<HTMLDivElement>(null);
-  const node4Ref = useRef<HTMLDivElement>(null);
-  const node5Ref = useRef<HTMLDivElement>(null);
-  const node6Ref = useRef<HTMLDivElement>(null);
-  const [isDark, setIsDark] = useState(true);
+  const navLinks = [
+    { label: 'INICIO', href: '#hero' },
+    { label: 'SOBRE MÍ', href: '#about' },
+    { label: 'EXPERIENCIA', href: '#experience' },
+    { label: 'PROYECTOS', href: '#projects' },
+    { label: 'CONTACTO', href: '#contact' },
+  ];
 
-  // Detectar tema para cambiar estilo de nodos orbitales
-  useEffect(() => {
-    const checkTheme = () => {
-      setIsDark(document.documentElement.classList.contains('dark'));
-    };
-    checkTheme();
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-    return () => observer.disconnect();
-  }, []);
-
-  // Estilos de nodos: en light mode todos usan estilo Database (glow dorado)
-  const nodeStyleLg = isDark
-    ? { background: '#14213D', borderColor: 'rgba(252,163,17,0.3)', color: '#FCA311', boxShadow: '0 0 10px rgba(252,163,17,0.15)' }
-    : { background: 'rgba(252,163,17,0.1)', border: '1px solid rgba(252,163,17,0.25)', color: '#FCA311', boxShadow: '0 0 15px rgba(252,163,17,0.3)', backdropFilter: 'blur(4px)' };
-
-  const nodeStyleMd = isDark
-    ? { background: '#14213D', borderColor: 'rgba(252,163,17,0.3)', color: '#FCA311', boxShadow: '0 0 10px rgba(252,163,17,0.15)' }
-    : { background: 'rgba(252,163,17,0.1)', border: '1px solid rgba(252,163,17,0.25)', color: '#FCA311', boxShadow: '0 0 15px rgba(252,163,17,0.3)', backdropFilter: 'blur(4px)' };
-
-  const nodeStyleSm = isDark
-    ? { background: '#14213D', borderColor: 'rgba(252,163,17,0.3)', color: '#FCA311' }
-    : { background: 'rgba(252,163,17,0.1)', border: '1px solid rgba(252,163,17,0.25)', color: '#FCA311', boxShadow: '0 0 12px rgba(252,163,17,0.25)', backdropFilter: 'blur(4px)' };
-
-  // Database node siempre usa su estilo glow (no cambia)
-  const nodeStyleDb = { background: 'rgba(252,163,17,0.1)', border: '1px solid rgba(252,163,17,0.2)', boxShadow: '0 0 15px rgba(252,163,17,0.3)', color: '#FCA311' };
-
-  // Animación JS del sistema orbital
-  useEffect(() => {
-    let animationFrameId: number;
-    let angle1 = 0;
-    let angle2 = 180;
-    let angle3 = 90;
-    let angle4 = 45;
-    let angle5 = 270;
-    let angle6 = 0;
-
-    const animate = () => {
-      const r1 = window.innerWidth < 768 ? 100 : 140;
-      const r2 = window.innerWidth < 768 ? 140 : 195;
-      const r3 = window.innerWidth < 768 ? 70 : 100;
-      const r4 = window.innerWidth < 768 ? 180 : 240;
-
-      angle1 += 0.2;
-      angle2 -= 0.15;
-      angle3 += 0.3;
-      angle4 += 0.1;
-      angle5 -= 0.12;
-      angle6 += 0.15;
-
-      if (node1Ref.current) {
-        node1Ref.current.style.transform = `translate(${Math.cos(angle1 * Math.PI / 180) * r1}px, ${Math.sin(angle1 * Math.PI / 180) * r1}px)`;
-      }
-      if (node2Ref.current) {
-        node2Ref.current.style.transform = `translate(${Math.cos(angle2 * Math.PI / 180) * r2}px, ${Math.sin(angle2 * Math.PI / 180) * r2}px)`;
-      }
-      if (node3Ref.current) {
-        node3Ref.current.style.transform = `translate(${Math.cos(angle3 * Math.PI / 180) * r3}px, ${Math.sin(angle3 * Math.PI / 180) * r3}px)`;
-      }
-      if (node4Ref.current) {
-        node4Ref.current.style.transform = `translate(${Math.cos(angle4 * Math.PI / 180) * r4}px, ${Math.sin(angle4 * Math.PI / 180) * r4}px)`;
-      }
-      if (node5Ref.current) {
-        node5Ref.current.style.transform = `translate(${Math.cos(angle5 * Math.PI / 180) * r4}px, ${Math.sin(angle5 * Math.PI / 180) * r4}px)`;
-      }
-      if (node6Ref.current) {
-        node6Ref.current.style.transform = `translate(${Math.cos(angle6 * Math.PI / 180) * r4}px, ${Math.sin(angle6 * Math.PI / 180) * r4}px)`;
-      }
-
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    animate();
-    return () => cancelAnimationFrame(animationFrameId);
-  }, []);
+  const socialLinks = [
+    { icon: LinkedinIcon, href: portfolio.social.linkedin },
+    { icon: GithubIcon, href: portfolio.social.github },
+    { icon: WhatsappIcon, href: 'https://wa.me/573004627891' },
+    { icon: MailIcon, href: `mailto:${portfolio.email}` },
+  ];
 
   return (
-    <section id="about" className="pt-32 pb-20 md:pt-48 md:pb-32 px-6 max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center justify-between gap-12 md:gap-20">
-
-      {/* Contenedor Izquierdo: Textos y Botones */}
-      <div className="flex-1 space-y-8 animate-fade-in-up mt-8 md:mt-0 z-10 w-full md:max-w-xl">
-        <div className="space-y-4">
-          <p className="text-accent font-medium tracking-wide code-font text-sm md:text-base">
-            Hola , Soy {portfolio.name.split(' ')[0]}
-          </p>
-          <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-foreground leading-[1.1]">
-            {portfolio.roleSecondary} y <br className="hidden md:block" />
-            <span className="text-accent relative inline-block mt-2">
-              {portfolio.role}
-              <span className="animate-blink text-accent font-light absolute -right-4 top-0">|</span>
-            </span>
-          </h1>
-        </div>
-
-        <p className="text-base md:text-lg text-muted/90 leading-relaxed max-w-lg">
-          {portfolio.summary}
-        </p>
-
-        <div className="flex flex-wrap items-center gap-6 pt-4 pb-2">
-          {/* Botón Principal (Card interactiva) - Descargar CV */}
-          <div className="relative duration-300 hover:rotate-0 -rotate-[8deg] group border-4 overflow-hidden rounded-2xl h-48 w-64 p-5 flex flex-col items-start gap-4 shadow-xl z-20" style={{ background: '#172b58ff', borderColor: '#FCA311' }}>
-            <div className="text-gray-50 z-20 flex flex-col">
-              <span className="font-bold text-4xl">CV</span>
-              <p className="text-xs font-medium tracking-wider">{portfolio.roleSecondary.toUpperCase()}</p>
-            </div>
-
-            <a href="/CV/CV_Julian_Vasquez_Ojeda..pdf" download className="duration-300 hover:bg-[#0a1628] border border-transparent hover:border-accent hover:text-gray-50 bg-gray-50 font-semibold px-3 py-2 flex flex-row items-center gap-3 rounded-lg z-20 shadow-md" style={{ color: '#2f6becff' }}>
-              Descargar CV
-              <svg className="w-5 h-5 fill-current" height="100" preserveAspectRatio="xMidYMid meet" viewBox="0 0 100 100" width="100" x="0" xmlns="http://www.w3.org/2000/svg" y="0">
-                <path d="M22.1,77.9a4,4,0,0,1,4-4H73.9a4,4,0,0,1,0,8H26.1A4,4,0,0,1,22.1,77.9ZM35.2,47.2a4,4,0,0,1,5.7,0L46,52.3V22.1a4,4,0,1,1,8,0V52.3l5.1-5.1a4,4,0,0,1,5.7,0,4,4,0,0,1,0,5.6l-12,12a3.9,3.9,0,0,1-5.6,0l-12-12A4,4,0,0,1,35.2,47.2Z" fillRule="evenodd"></path>
-              </svg>
-            </a>
-
-
-
-            <svg className="group-hover:scale-125 duration-500 absolute -bottom-0.5 -right-20 w-48 h-48 z-10 -my-2 fill-gray-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" style={{ stroke: '#656a70ff' }}>
-              <path data-name="layer1" d="M 50.4 51 C 40.5 49.1 40 46 40 44 v -1.2 a 18.9 18.9 0 0 0 5.7 -8.8 h 0.1 c 3 0 3.8 -6.3 3.8 -7.3 s 0.1 -4.7 -3 -4.7 C 53 4 30 0 22.3 6 c -5.4 0 -5.9 8 -3.9 16 c -3.1 0 -3 3.8 -3 4.7 s 0.7 7.3 3.8 7.3 c 1 3.6 2.3 6.9 4.7 9 v 1.2 c 0 2 0.5 5 -9.5 6.8 S 2 62 2 62 h 60 a 14.6 14.6 0 0 0 -11.6 -11 z" strokeMiterlimit="10" strokeWidth="5"></path>
-            </svg>
-
-            <svg className="group-hover:scale-125 duration-200 absolute -bottom-0.5 -right-20 w-48 h-48 z-10 -my-2 fill-gray-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" style={{ stroke: '#FCA311' }}>
-              <path data-name="layer1" d="M 50.4 51 C 40.5 49.1 40 46 40 44 v -1.2 a 18.9 18.9 0 0 0 5.7 -8.8 h 0.1 c 3 0 3.8 -6.3 3.8 -7.3 s 0.1 -4.7 -3 -4.7 C 53 4 30 0 22.3 6 c -5.4 0 -5.9 8 -3.9 16 c -3.1 0 -3 3.8 -3 4.7 s 0.7 7.3 3.8 7.3 c 1 3.6 2.3 6.9 4.7 9 v 1.2 c 0 2 0.5 5 -9.5 6.8 S 2 62 2 62 h 60 a 14.6 14.6 0 0 0 -11.6 -11 z" strokeMiterlimit="10" strokeWidth="2"></path>
-            </svg>
-          </div>
-
-          {/* Botón Secundario - Contáctame (Animado) */}
-
-        </div>
-
-        {/* Círculos Redes Sociales Pequeños debajo de los botones */}
-        <div className="flex items-center gap-3 pt-4 border-t border-border/30 w-max pr-12">
-          <a
-            href={portfolio.social.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-10 h-10 flex items-center justify-center rounded-full bg-foreground/5 text-muted hover:bg-accent hover:text-black transition-all duration-300"
-            title="LinkedIn"
-          >
-            <Icons.LinkedIn />
-          </a>
-          <a
-            href={portfolio.social.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-10 h-10 flex items-center justify-center rounded-full bg-foreground/5 text-muted hover:bg-accent hover:text-black transition-all duration-300"
-            title="GitHub"
-          >
-            <Icons.GitHub />
-          </a>
-          <a
-            href={`mailto:${portfolio.email}`}
-            className="w-10 h-10 flex items-center justify-center rounded-full bg-foreground/5 text-muted hover:bg-accent hover:text-black transition-all duration-300"
-            title="Email"
-          >
-            <Icons.Mail />
-          </a>
-        </div>
-      </div>
-
-      {/* Contenedor Derecho: Sistema Orbital con Foto animado mediante JS */}
-      {/* Movido a la derecha usando md:ml-auto u otorgando un ancho fijo contenedor. */}
-      <div className="relative w-[300px] h-[300px] md:w-[500px] md:h-[500px] shrink-0 flex items-center justify-center -translate-y-6 md:translate-y-0 md:translate-x-12 lg:translate-x-16">
-
-        {/* Anillo Orbital Ultra-Externo (Nuevo) */}
-        <div className="absolute inset-[-40px] md:inset-[-30px] rounded-full border opacity-40 dark:opacity-20 hidden sm:block" style={{ borderColor: 'rgba(252,163,17,0.15)' }}></div>
-
-        {/* Anillo Orbital Externo */}
-        <div className="absolute inset-0 rounded-full border opacity-50 dark:opacity-25 hidden sm:block" style={{ borderColor: 'rgba(252,163,17,0.2)' }}></div>
-
-        {/* Anillo Orbital Medio */}
-        <div className="absolute inset-10 md:inset-16 rounded-full border opacity-60 dark:opacity-35" style={{ borderColor: 'rgba(252,163,17,0.25)' }}></div>
-
-        {/* Anillo Orbital Interno */}
-        <div className="absolute inset-20 md:inset-28 rounded-full border opacity-80 dark:opacity-45" style={{ borderColor: 'rgba(252,163,17,0.3)' }}></div>
-
-        {/* Nodos Orbitando (Transform controladas por el hook de useEffect JS) */}
-
-        {/* Nodo 1: Satélite (Code) */}
-        <div ref={node1Ref} className="absolute top-1/2 left-1/2 -mt-4 -ml-4 z-20">
-          <div className="w-8 h-8 rounded-full flex items-center justify-center" style={nodeStyleLg}>
-            <Icons.Code />
-          </div>
-        </div>
-
-        {/* Nodo 2: Satélite externo (Database) */}
-        <div ref={node2Ref} className="absolute top-1/2 left-1/2 -mt-5 -ml-5 z-20">
-          <div className="w-10 h-10 rounded-full backdrop-blur flex items-center justify-center" style={nodeStyleDb}>
-            <Icons.Database />
-          </div>
-        </div>
-
-        {/* Nodo 3: Satélite interno (Star) */}
-
-
-        {/* Nodo 4: Satélite Nuevo Ultra-Externo (BarChart/PowerBI) */}
-        <div ref={node4Ref} className="absolute top-1/2 left-1/2 -mt-4 -ml-4 z-20 hidden sm:block">
-          <div className="w-8 h-8 rounded-full flex items-center justify-center" style={nodeStyleMd}>
-            <Icons.BarChart />
-          </div>
-        </div>
-
-        {/* Nodo 5: Satélite Nuevo Ultra-Externo (Terminal/SQL-Python) */}
-        <div ref={node5Ref} className="absolute top-1/2 left-1/2 -mt-4 -ml-4 z-20 hidden sm:block">
-          <div className="w-8 h-8 rounded-full flex items-center justify-center" style={nodeStyleMd}>
-            <Icons.Terminal />
-          </div>
-        </div>
-
-        <div ref={node6Ref} className="absolute top-1/2 left-1/2 -mt-3 -ml-3 z-20">
-          <div className="w-6 h-6 rounded-full flex items-center justify-center" style={nodeStyleSm}>
-            <Icons.Star />
-          </div>
-        </div>
-
-        {/* Centro: Foto Principal del Usuario */}
-        <div className="relative w-44 h-44 md:w-56 md:h-56 z-30 group rounded-full overflow-hidden ring-2 transition-transform duration-500 hover:scale-105" style={{ '--tw-ring-color': 'rgba(252,163,17,0.6)', boxShadow: '0 0 40px rgba(252,163,17,0.25)' } as React.CSSProperties}>
-          <Image
-            src="/images/Retrato_corporativo_pulido_202604051338.jpeg"
-            alt={portfolio.name}
-            fill
-            className="object-cover"
-            unoptimized
-            priority
-          />
-          <div className="absolute inset-0 rounded-full border border-white/20 dark:border-white/10 mix-blend-overlay pointer-events-none"></div>
-        </div>
-      </div>
+    <section id="hero" className="w-full">
+      <MinimalistHero
+        logoText="Julián V."
+        navLinks={navLinks}
+        mainText="Analista de Datos e Ingeniero de Sistemas especializado en Power BI, Python y SQL para transformar datos en decisiones estratégicas."
+        readMoreLink="#about"
+        imageSrc="/images/julian_photo.png"
+        imageAlt="Julián Vásquez Ojeda - Analista de Datos"
+        overlayText={{
+          part1: 'data',
+          part2: 'is',
+          part3: 'power.',
+        }}
+        socialLinks={socialLinks}
+        locationText="Bogotá, Colombia"
+      />
     </section>
   );
 }
@@ -1517,29 +1343,24 @@ function CustomCursor() {
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background font-sans selection:bg-accent/20 transition-colors duration-300">
+    <div className="min-h-screen bg-black font-sans selection:bg-yellow-400 selection:text-black">
 
       {/* Cursor personalizado (solo desktop) */}
       <CustomCursor />
 
-      {/* Carga del botón del DarkMode global */}
-      <ThemeToggle />
-
-      {/* Menú de Navegación superior */}
-      <Navbar />
-
       {/* Contenido general encapsulado por tag 'main' de HTML semántico */}
-      <main>
-        <Hero />         {/* Portada */}
-        <StatsCounter /> {/* Estadísticas abstractas (Años exp., clientes) */}
-        <Skills />       {/* Competencias Técnicas */}
-        <Projects />     {/* Cards interactivas (Trabajos extras) */}
-        <Contact />      {/* Tarjeta inferior final */}
+      <main className="bg-black">
+        <Hero />              {/* Hero Minimalista */}
+        <StatsSection />      {/* Métricas e Impacto */}
+        <SkillsSection />     {/* Competencias Técnicas & Herramientas */}
+        <ExperienceSection /> {/* Trayectoria Laboral & Educación */}
+        <ProjectsSection />   {/* Portafolio de Proyectos */}
+        <ContactSection />    {/* Formulario e Información de Contacto */}
       </main>
 
-      {/* Footer (Texto de derechos pequeños inferior a CTA)*/}
-      <footer className="py-8 text-center border-t" style={{ background: '#000000', borderColor: 'rgba(252,163,17,0.2)' }}>
-        <p className="text-sm font-medium" style={{ color: '#E5E5E5' }}> {portfolio.name}. &copy; {new Date().getFullYear()}</p>
+      {/* Footer */}
+      <footer className="py-8 text-center border-t border-zinc-900 bg-black text-zinc-400">
+        <p className="text-xs font-semibold tracking-wider uppercase"> {portfolio.name}. &copy; {new Date().getFullYear()} — Todos los derechos reservados</p>
       </footer>
 
     </div>

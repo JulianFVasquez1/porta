@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { CustomCursor } from "@/components/ui/custom-cursor";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -8,9 +9,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Portafolio | Ingeniero de Sistemas",
-  description: "Desarrollador Full Stack especializado en crear soluciones tecnológicas que transforman problemas complejos en sistemas elegantes",
-  keywords: ["Ingeniero de Sistemas", "Desarrollador Full Stack", "React", "Next.js", "Node.js", "TypeScript"],
+  title: "Julián Vasquez | Analista de Datos & Ingeniero de Sistemas",
+  description: "Portafolio de Julián Vasquez Ojeda. Analista de Datos e Ingeniero de Sistemas especializado en Power BI, Python, SQL y desarrollo web con React y Next.js.",
+  keywords: ["Julián Vasquez", "Analista de Datos", "Ingeniero de Sistemas", "Power BI", "Python", "SQL", "React", "Next.js", "Bogotá"],
 };
 
 export default function RootLayout({
@@ -20,7 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={`${inter.variable} scroll-smooth`}>
-      <body className="min-h-full antialiased">{children}</body>
+      <body className="min-h-full antialiased">
+        <CustomCursor />
+        {children}
+      </body>
     </html>
   );
 }
