@@ -1,45 +1,68 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
 const SMOOTH_EASE = [0.16, 1, 0.3, 1] as const;
 
-export const StatsSection = () => {
-  const ref = React.useRef(null);
+interface CounterProps {
+  target: number;
+  decimals?: number;
+  suffix?: string;
+}
+
+const AnimatedCounter = ({ target, decimals = 0, suffix = '+' }: CounterProps) => {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true, margin: '-50px' });
-  const [counts, setCounts] = useState({ projects: 0, years: 0, clients: 0 });
 
   useEffect(() => {
     if (!isInView) return;
 
-    const duration = 2000;
-    const steps = 60;
-    const interval = duration / steps;
-    const targets = { projects: 15, years: 2, clients: 10 };
-    let step = 0;
+    let startTime: number | null = null;
+    let animationFrameId: number;
+    const duration = 2000; // 2 segundos de animación suave
 
-    const timer = setInterval(() => {
-      step++;
-      const progress = step / steps;
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Curva de aceleración suave (easeOutQuart)
       const easeOut = 1 - Math.pow(1 - progress, 4);
+      const currentVal = easeOut * target;
 
-      setCounts({
-        projects: Math.floor(targets.projects * easeOut),
-        years: Math.floor(targets.years * easeOut * 10) / 10,
-        clients: Math.floor(targets.clients * easeOut),
-      });
+      setCount(currentVal);
 
-      if (step >= steps) clearInterval(timer);
-    }, interval);
+      if (progress < 1) {
+        animationFrameId = requestAnimationFrame(animate);
+      } else {
+        setCount(target);
+      }
+    };
 
-    return () => clearInterval(timer);
-  }, [isInView]);
+    animationFrameId = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [isInView, target]);
+
+  const displayValue = decimals > 0 ? count.toFixed(decimals) : Math.floor(count);
+
+  return (
+    <span ref={ref}>
+      {displayValue}{suffix}
+    </span>
+  );
+};
+
+export const StatsSection = () => {
+  const ref = React.useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-50px' });
 
   const stats = [
-    { value: `${counts.projects}+`, label: 'Proyectos Completados', desc: 'En Power BI, SQL, Python y Desarrollo Web' },
-    { value: `${counts.years}+`, label: 'Años de Experiencia', desc: 'Análisis institucional y desarrollo de sistemas' },
-    { value: `${counts.clients}+`, label: 'Clientes & Proyectos Felices', desc: 'Soluciones entregadas con alto impacto' },
+    { target: 15, suffix: '+', label: 'Proyectos Completados', desc: 'En Power BI, SQL, Python y Desarrollo Web' },
+    { target: 2, suffix: '+', label: 'Años de Experiencia', desc: 'Análisis institucional y desarrollo de sistemas' },
+    { target: 10, suffix: '+', label: 'Clientes & Proyectos Felices', desc: 'Soluciones entregadas con alto impacto' },
   ];
 
   return (
@@ -57,7 +80,7 @@ export const StatsSection = () => {
               <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-yellow-400/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="space-y-3">
                 <div className="text-5xl md:text-6xl font-black text-yellow-400 tracking-tight">
-                  {stat.value}
+                  <AnimatedCounter target={stat.target} suffix={stat.suffix} />
                 </div>
                 <h3 className="text-lg font-bold text-white tracking-wide">
                   {stat.label}
@@ -73,3 +96,4 @@ export const StatsSection = () => {
     </section>
   );
 };
+

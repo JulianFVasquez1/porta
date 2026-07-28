@@ -14,6 +14,8 @@ export type CardStackItem = {
   title: string;
   description?: string;
   imageSrc?: string;
+  icon?: React.ReactNode;
+  snippet?: string;
   href?: string;
   ctaLabel?: string;
   tag?: string;
@@ -371,18 +373,72 @@ export function CardStack<T extends CardStackItem>({
 }
 
 function DefaultFanCard({ item, active }: { item: CardStackItem; active: boolean }) {
+  const hasIcon = Boolean(item.icon);
+
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-xl bg-zinc-950 border border-zinc-800">
-      {/* image */}
-      <div className="absolute inset-0">
-        {item.imageSrc ? (
-          <img
-            src={item.imageSrc}
-            alt={item.title}
-            className="h-full w-full object-cover"
-            draggable={false}
-            loading="eager"
-          />
+    <div
+      className={cn(
+        "group relative h-full w-full overflow-hidden rounded-xl bg-zinc-950 border transition-all duration-300 flex flex-col justify-between select-none",
+        active
+          ? "border-yellow-400/50 shadow-[0_0_30px_rgba(250,204,21,0.12)]"
+          : "border-zinc-800/90 hover:border-zinc-700"
+      )}
+    >
+      {/* Background radial glow & subtle tech dot matrix */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-yellow-500/15 via-transparent to-transparent opacity-80" />
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage: "radial-gradient(#ffffff 1px, transparent 1px)",
+          backgroundSize: "16px 16px",
+        }}
+      />
+
+      {/* Top Header: Tag Badge & Code Snippet */}
+      <div className="relative z-20 flex items-center justify-between p-5 pb-0">
+        {item.tag ? (
+          <span className="text-[10px] font-extrabold tracking-wider uppercase px-3 py-1 rounded-md bg-yellow-400 text-black shadow-md shadow-yellow-400/20">
+            {item.tag}
+          </span>
+        ) : (
+          <div />
+        )}
+
+        {item.snippet && (
+          <span className="font-mono text-[10px] font-semibold text-yellow-400/90 bg-zinc-900/90 border border-yellow-400/20 px-2.5 py-1 rounded-md shadow-inner backdrop-blur-sm">
+            {item.snippet}
+          </span>
+        )}
+      </div>
+
+      {/* Center Showcase Area: Glowing Icon Shield or Image */}
+      <div className="relative z-10 flex flex-1 items-center justify-center py-3 px-6">
+        {hasIcon ? (
+          <div className="relative flex items-center justify-center">
+            {/* Wide ambient glow spread */}
+            <div className="absolute w-32 h-32 rounded-full bg-yellow-400/20 blur-2xl" />
+            {/* Tighter hot glow */}
+            <div className="absolute w-20 h-20 rounded-full bg-yellow-400/30 blur-xl group-hover:bg-yellow-400/50 transition-all duration-500" />
+
+            {/* Outer ring */}
+            <div className="relative flex items-center justify-center rounded-[20px] p-[2px] bg-gradient-to-br from-yellow-400/60 via-yellow-400/20 to-transparent shadow-[0_0_40px_rgba(250,204,21,0.2)] group-hover:shadow-[0_0_50px_rgba(250,204,21,0.35)] transition-all duration-500">
+              {/* Icon Shield inner */}
+              <div className="flex items-center justify-center p-5 rounded-[18px] bg-gradient-to-b from-zinc-800/80 to-zinc-950 group-hover:from-zinc-700/80 transition-all duration-300">
+                {item.icon}
+              </div>
+            </div>
+          </div>
+        ) : item.imageSrc ? (
+          <div className="absolute inset-0 z-0">
+            <img
+              src={item.imageSrc}
+              alt={item.title}
+              className="h-full w-full object-cover"
+              draggable={false}
+              loading="eager"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent" />
+          </div>
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-zinc-900 text-sm text-zinc-500">
             No image
@@ -390,21 +446,10 @@ function DefaultFanCard({ item, active }: { item: CardStackItem; active: boolean
         )}
       </div>
 
-      {/* tag badge if present */}
-      {item.tag && (
-        <div className="absolute top-4 left-4 z-20">
-          <span className="text-[11px] font-extrabold tracking-wider uppercase px-3 py-1 rounded-md bg-yellow-400 text-black shadow-lg">
-            {item.tag}
-          </span>
-        </div>
-      )}
+      {/* Bottom Content Area: Title & Description */}
 
-      {/* gradient overlay */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent" />
-
-      {/* content */}
-      <div className="relative z-10 flex h-full flex-col justify-end p-6">
-        <h3 className="text-xl md:text-2xl font-bold text-white tracking-tight drop-shadow-md">
+      <div className="relative z-10 p-6 pt-2 bg-gradient-to-t from-zinc-950 via-zinc-950/95 to-transparent">
+        <h3 className="text-xl md:text-2xl font-bold text-white tracking-tight group-hover:text-yellow-400 transition-colors duration-300 drop-shadow-sm">
           {item.title}
         </h3>
         {item.description ? (
